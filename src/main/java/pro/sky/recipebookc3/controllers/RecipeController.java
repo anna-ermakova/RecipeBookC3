@@ -36,8 +36,9 @@ public class RecipeController {
             @ApiResponse(responseCode = "200", description = "Рецепт найден.")
     })
     @Parameters(value = {@Parameter(name = "idRec", example = "1")})
-    ResponseEntity<Recipe> getRecipe(@PathVariable Integer idRec) {
-        return ResponseEntity.ok(recipeService.getRecipe(idRec));
+    ResponseEntity<Recipe> getRecipe (@PathVariable Integer idRec) {
+        Recipe recipe = recipeService.getRecipe(idRec);
+        return ResponseEntity.ok(recipe);
     }
 
     @PostMapping

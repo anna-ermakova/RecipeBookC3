@@ -65,9 +65,6 @@ public class IngredientController {
             )
     })
     ResponseEntity<Ingredient> addIngredient(@Valid @RequestBody Ingredient ingredient) {
-        //  if (StringUtils.isBlank(ingredient.getIngredientName())) {
-        //      return ResponseEntity.badRequest().body("Название игредиента не может быть пустым.");
-        //  }
         return ResponseEntity.ok(ingredientService.addIngredient(ingredient));
     }
 

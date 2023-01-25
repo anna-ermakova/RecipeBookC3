@@ -33,7 +33,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe updateRecipe(Integer idRec, Recipe recipe) {
-        if (!recipeMap.containsKey(idRec)) {
+        if (recipeMap.containsKey(idRec)) {
             throw new NotFoundException("Рецепт с заданным id не найден.");
         }
         return recipeMap.put(idRec, recipe);
@@ -46,7 +46,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe removeRecipe(Integer idRec) {
-        if (!recipeMap.containsKey(idRec)) {
+        if (recipeMap.containsKey(idRec)) {
             throw new NotFoundException("Рецепт с заданным id не найден.");
         }
         return recipeMap.remove(idRec);
