@@ -16,9 +16,6 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
-        if (!ingredientMap.containsValue(ingredient)) {
-            throw new IngredientExistsExceptoin();
-        }
         ingredientMap.put(idIngr++, ingredient);
         return ingredient;
     }

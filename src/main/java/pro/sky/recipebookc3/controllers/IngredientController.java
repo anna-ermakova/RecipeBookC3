@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +18,7 @@ import pro.sky.recipebookc3.model.Ingredient;
 import pro.sky.recipebookc3.services.IngredientService;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +30,6 @@ import java.util.Map;
 public class IngredientController {
     private final IngredientService ingredientService;
 
-
     @GetMapping("/{idIngr}")
     @Operation(summary = "Получение ингредиента по id.")
     @ApiResponses(value = {
@@ -37,20 +38,37 @@ public class IngredientController {
                     description = "Игредиент получен.",
                     content = {
                             @Content(
-                                    mediaType = "application/json"
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Ingredient.class)
                             )
                     }
             )
     })
     @Parameters(value = {@Parameter(name = "idIngr", example = "1")})
-    Ingredient getIngredient(@PathVariable Integer idIngr) {
-        return ingredientService.getIngredient(idIngr);
+    ResponseEntity<Ingredient> getIngredient(@PathVariable Integer idIngr) {
+        Ingredient ingredient = ingredientService.getIngredient(idIngr);
+        return ResponseEntity.ok(ingredient);
     }
 
     @PostMapping
-    @Operation(summary = "Добавление ингредиента в список ингредиентов.")
-    Ingredient addIngredient(@Valid @RequestBody Ingredient ingredient) {
-            return ingredientService.addIngredient(ingredient);
+    @Operation(summary = "Добавление ингредиента.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ингредиент добавлен",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Ingredient.class)
+                            )
+                    }
+            )
+    })
+    ResponseEntity<Ingredient> addIngredient(@Valid @RequestBody Ingredient ingredient) {
+        //  if (StringUtils.isBlank(ingredient.getIngredientName())) {
+        //      return ResponseEntity.badRequest().body("Название игредиента не может быть пустым.");
+        //  }
+        return ResponseEntity.ok(ingredientService.addIngredient(ingredient));
     }
 
     @PutMapping("/{idIngr}")
@@ -61,18 +79,15 @@ public class IngredientController {
                     description = "Игредиент изменен.",
                     content = {
                             @Content(
-                                    mediaType = "application/json"
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Ingredient.class)
                             )
                     }
             )
     })
     @Parameters(value = {@Parameter(name = "idIngr", example = "1")})
-    public ResponseEntity<Ingredient> editIngredient(@Valid @RequestBody Ingredient ingredients, @PathVariable long idIngr) {
-        if (!ingredientService.existById(idIngr)) {
-            return ResponseEntity.notFound().build();
-        }
-        ingredientService.editIngredient(idIngr, ingredients);
-        return ResponseEntity.ok(ingredients);
+    ResponseEntity<Ingredient> updateIngredient(@PathVariable Integer idIngr, @Valid @RequestBody Ingredient ingredient) {
+        return ResponseEntity.ok(ingredientService.updateIngredient(idIngr, ingredient));
     }
 
     @DeleteMapping("/{idIngr}")
@@ -83,12 +98,10 @@ public class IngredientController {
                     description = "Ингредиент удален."
             )})
     @Parameters(value = {@Parameter(name = "idIngr", example = "1")})
-    public ResponseEntity<Void> deleteIngredient(@PathVariable long idIngr) {
-        if (ingredientService.deleteIngredient(idIngr)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    ResponseEntity<Ingredient> removeIngredient(@PathVariable Integer idIngr) {
+        return ResponseEntity.ok(ingredientService.removeIngredient(idIngr));
     }
+
 
     @GetMapping
     @Operation(summary = "Получение всех ингредиентов.")
@@ -98,13 +111,14 @@ public class IngredientController {
                     description = "Все ингредиенты получены.",
                     content = {
                             @Content(
-                                    mediaType = "application/json"
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Ingredient.class)
                             )
                     }
             )
     })
-    public ResponseEntity<Map<Long, Ingredient>> getAllIngredients() {
-        return ResponseEntity.ok(ingredientService.getAllIngredients());
+    public Collection<Ingredient> getAllIngredients() {
+        return this.ingredientService.getAllIngredient();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
