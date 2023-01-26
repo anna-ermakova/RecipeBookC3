@@ -30,7 +30,7 @@ import java.util.Map;
 public class RecipeController {
     private final RecipeService recipeService;
 
-    @GetMapping("/idRec")
+    @GetMapping("/{idRec}")
     @Operation(summary = "Поиск рецепта по id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Рецепт найден.")
@@ -52,7 +52,7 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.addRecipe(recipe));
     }
 
-    @PutMapping("/idRec")
+    @PutMapping("/{idRec}")
     @Operation(summary = "Изменение рецепта по id.")
     @ApiResponses(value = {
             @ApiResponse(
