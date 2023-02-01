@@ -14,4 +14,8 @@ public interface IngredientService {
     Ingredient removeIngredient(Integer idIngr);
 
     Ingredient updateIngredient(Integer idIngr, Ingredient ingredient);
+
+    void saveToFileIngr();
+
+    void readFromFileIngr();
 }
