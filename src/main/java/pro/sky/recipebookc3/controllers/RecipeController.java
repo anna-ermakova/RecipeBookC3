@@ -69,7 +69,9 @@ public class RecipeController {
             @Parameter(name = "idRec", example = "1")
     })
     ResponseEntity<Recipe> updateRecipe(@PathVariable Integer idRec, @Valid @RequestBody Recipe recipe) {
-        return ResponseEntity.ok(recipeService.updateRecipe(idRec, recipe));
+        Recipe recReturn = recipeService.updateRecipe(idRec, recipe);
+        recipeService.saveToFileRec();
+        return ResponseEntity.ok(recReturn);
     }
 
     @DeleteMapping("/{idRec}")

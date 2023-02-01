@@ -1,8 +1,12 @@
 package pro.sky.recipebookc3.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.internal.access.JavaUtilResourceBundleAccess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pro.sky.recipebookc3.model.Ingredient;
 import pro.sky.recipebookc3.services.FilesService;
 
 import java.io.IOException;
@@ -12,7 +16,6 @@ import java.nio.file.Path;
 @Service
 @RequiredArgsConstructor
 public class FilesServiceImpl implements FilesService {
-    private final FilesServiceImpl filesService;
     @Value("${path.to.data.file}")
     private String dataFilePath;
     @Value("${name.of.ingredient.data.file}")
@@ -20,7 +23,7 @@ public class FilesServiceImpl implements FilesService {
     @Value("${name.of.recipe.data.file}")
     private String dataFileNameRec;
 
-    @Override
+    /*@Override
     public boolean saveToFileRec(String json) {
         try {
             cleanDataFileRec();
@@ -28,6 +31,19 @@ public class FilesServiceImpl implements FilesService {
             return true;
         } catch (IOException e) {
             return false;
+        }
+    }*/
+
+    public void saveToJsonFile(Ingredient ingredient, String dataFileNameIngr) {
+        Path path = Path.of(dataFileNameIngr + ".json");
+        try {
+            String json = new ObjectMapper().writeValueAsString(ingredient);
+            Files.createDirectories(dataFilePath.getParent());
+            Files.deleteIfExists(path);
+            Files.createFile(path);
+            Files.writeString(path, json);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     @Override

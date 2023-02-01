@@ -84,7 +84,9 @@ public class IngredientController {
     })
     @Parameters(value = {@Parameter(name = "idIngr", example = "1")})
     ResponseEntity<Ingredient> updateIngredient(@PathVariable Integer idIngr, @Valid @RequestBody Ingredient ingredient) {
-        return ResponseEntity.ok(ingredientService.updateIngredient(idIngr, ingredient));
+        Ingredient ingrReturn = ingredientService.updateIngredient(idIngr, ingredient);
+        ingredientService.saveToFileIngr();
+        return ResponseEntity.ok(ingrReturn);
     }
 
     @DeleteMapping("/{idIngr}")
