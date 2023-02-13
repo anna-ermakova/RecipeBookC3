@@ -1,18 +1,16 @@
 package pro.sky.recipebookc3.services;
 
+import java.io.File;
+
 public interface FilesService {
 
 
-    boolean saveToFileRec(String json);
+    boolean saveToFile(String json);
 
-    boolean saveToFileIngr(String json);
+    String readFromFile();
 
-    String readFromFileRec();
+    boolean cleanDataFile();
 
-    String readFromFileIngr();
-
-    boolean cleanDataFileRec();
-
-    boolean cleanDataFileIngr();
+    File getDataFileTxt();
 
 }

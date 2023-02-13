@@ -4,22 +4,24 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
+import pro.sky.recipebookc3.exception.FileProcessingException;
 import pro.sky.recipebookc3.model.Ingredient;
 import pro.sky.recipebookc3.services.FilesService;
 import pro.sky.recipebookc3.services.IngredientService;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class IngredientServiceImpl implements IngredientService {
-    final private FilesService filesServiceIngr;
+public class IngredientServiceImpl implements IngredientService  {
+    final private FilesService filesServiceIngredient;
+
     private Map<Integer, Ingredient> ingredientMap = new HashMap<>();
     private static Integer idIngr = 0;
 
@@ -60,30 +62,30 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredient;
     }
     @Override
-    public void saveToFileIngr() {
+    public void saveToFileIngredient() throws FileProcessingException {
         try {
             String json = new ObjectMapper().writeValueAsString(ingredientMap);
-            filesServiceIngr.saveToFileIngr(json);
+            filesServiceIngredient.saveToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessingException("Файл не сохранен");
         }
     }
 
 
     @Override
-    public void readFromFileIngr() {
-        String json = filesServiceIngr.readFromFileIngr();
+    public void readFromFileIngredient() {
         try {
+            String json = filesServiceIngredient.readFromFile();
             ingredientMap = new ObjectMapper().readValue(json,
-                    new TypeReference<Map<Integer, Ingredient>>() {
+                    new TypeReference<HashMap<Integer, Ingredient>>() {
                     });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessingException("Файл не удалось прочитать");
         }
     }
 
     @PostConstruct
-    private void init() {
-        readFromFileIngr();
+    private void initIngredient() throws FileProcessingException{
+        readFromFileIngredient();
     }
 }
