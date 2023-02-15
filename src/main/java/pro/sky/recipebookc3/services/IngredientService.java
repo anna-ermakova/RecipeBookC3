@@ -1,5 +1,6 @@
 package pro.sky.recipebookc3.services;
 
+import pro.sky.recipebookc3.exception.FileProcessingException;
 import pro.sky.recipebookc3.model.Ingredient;
 
 import java.util.Collection;
@@ -18,5 +19,7 @@ public interface IngredientService {
 
     void saveToFileIngredient();
 
-    void readFromFileIngredient();
+    void readFromFileIngredient() throws FileProcessingException;
+
+
 }

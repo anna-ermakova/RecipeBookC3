@@ -70,7 +70,7 @@ public class RecipeController {
     })
     ResponseEntity<Recipe> updateRecipe(@PathVariable Integer idRec, @Valid @RequestBody Recipe recipe) {
         Recipe recReturn = recipeService.updateRecipe(idRec, recipe);
-        recipeService.saveToFileRec();
+        recipeService.saveToFileRecipe();
         return ResponseEntity.ok(recReturn);
     }
 

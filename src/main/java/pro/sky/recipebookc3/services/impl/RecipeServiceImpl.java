@@ -3,28 +3,38 @@ package pro.sky.recipebookc3.services.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
+import pro.sky.recipebookc3.exception.ExistsException;
+import pro.sky.recipebookc3.exception.FileProcessingException;
 import pro.sky.recipebookc3.model.Recipe;
 import pro.sky.recipebookc3.services.FilesService;
 import pro.sky.recipebookc3.services.RecipeService;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
+
 public class RecipeServiceImpl implements RecipeService {
-    final private FilesService filesServiceRec;
+    private final FilesService filesService;
+
+    public RecipeServiceImpl(@Qualifier("recipeFileService") FilesService filesService) {
+        this.filesService = filesService;
+    }
+
     private Map<Integer, Recipe> recipeMap = new HashMap<>();
     private static Integer idRec = 0;
 
+
     @Override
     public Recipe addRecipe(Recipe recipe) {
+        if (recipeMap.containsValue(recipe)) {
+            throw new ExistsException("такой рецепт уже есть");
+        }
         recipeMap.put(idRec++, recipe);
         return recipe;
     }
@@ -59,30 +69,30 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void saveToFileRec() {
+    public void saveToFileRecipe() throws FileProcessingException {
         try {
             String json = new ObjectMapper().writeValueAsString(recipeMap);
-            filesServiceRec.saveToFile(json);
+            filesService.saveToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessingException("Файл не сохранен");
         }
 
     }
+
     @Override
-    public void readFromFileRec() {
-        String json = filesServiceRec.readFromFile();
+    public void readFromFileRecipe() throws FileProcessingException {
+        String json = filesService.readFromFile();
         try {
             recipeMap = new ObjectMapper().readValue(json,
                     new TypeReference<Map<Integer, Recipe>>() {
                     });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessingException("Файл не удалось прочитать");
         }
     }
 
     @PostConstruct
-    private void init() {
-        readFromFileRec();
+    private void initRecipe() throws FileProcessingException {
+        readFromFileRecipe();
     }
-
 }

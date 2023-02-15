@@ -1,11 +1,8 @@
 package pro.sky.recipebookc3.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pro.sky.recipebookc3.exception.FileProcessingException;
-import pro.sky.recipebookc3.model.Ingredient;
 import pro.sky.recipebookc3.services.FilesService;
 
 import java.io.File;
@@ -32,13 +29,14 @@ public class IngredientFileServiceImpl implements FilesService {
         }
     }
 
+
     @Override
     public String readFromFile() {
         if (Files.exists(Path.of(dataFilePathIngredient, dataFileNameIngredient))) {
             try {
                 return Files.readString(Path.of(dataFilePathIngredient, dataFileNameIngredient));
             } catch (IOException e) {
-                throw new FileProcessingException("не удалось найти файл");
+                throw new FileProcessingException("не удалось прочитать файл");
             }
         } else {
             return "{ }";

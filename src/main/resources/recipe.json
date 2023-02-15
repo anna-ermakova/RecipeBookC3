@@ -1,0 +1,14 @@
+{"0": {
+  "cookingSteps": [
+    "string"
+  ],
+  "cookingTimeMin": 10,
+  "ingredients": [
+    {
+      "ingredientName": "string",
+      "volume": 10,
+      "unitOfMeasure": "string"
+    }
+  ],
+  "recipeName": "string"
+}}

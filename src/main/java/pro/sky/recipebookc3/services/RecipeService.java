@@ -1,5 +1,6 @@
 package pro.sky.recipebookc3.services;
 
+import pro.sky.recipebookc3.exception.FileProcessingException;
 import pro.sky.recipebookc3.model.Recipe;
 
 import java.util.Collection;
@@ -16,7 +17,9 @@ public interface RecipeService {
 
     Recipe removeRecipe(Integer idRec);
 
-    void saveToFileRec();
+    void saveToFileRecipe();
 
-    void readFromFileRec();
+    void readFromFileRecipe() throws FileProcessingException;
+
+    //  void readFromFileRecipe();
 }

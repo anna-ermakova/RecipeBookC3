@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.webjars.NotFoundException;
 import pro.sky.recipebookc3.model.Ingredient;
 import pro.sky.recipebookc3.services.IngredientService;
 
@@ -85,7 +86,7 @@ public class IngredientController {
     @Parameters(value = {@Parameter(name = "idIngr", example = "1")})
     ResponseEntity<Ingredient> updateIngredient(@PathVariable Integer idIngr, @Valid @RequestBody Ingredient ingredient) {
         Ingredient ingrReturn = ingredientService.updateIngredient(idIngr, ingredient);
-        ingredientService.saveToFileIngr();
+        ingredientService.saveToFileIngredient();
         return ResponseEntity.ok(ingrReturn);
     }
 
@@ -133,5 +134,10 @@ public class IngredientController {
         return errors;
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public String handleNotFoundException(NotFoundException notFoundException) {
+        return notFoundException.getMessage();
+    }
 
 }
