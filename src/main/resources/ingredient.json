@@ -1,5 +1,1 @@
-{"0": {
-  "ingredientName": "string",
-  "unitOfMeasure": "string",
-  "volume": 10
-}}
+{"0":{"ingredientName":"eggs","volume":2,"unitOfMeasure":"шт"},"1":{"ingredientName":"лук","volume":2,"unitOfMeasure":"кг"}}

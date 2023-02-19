@@ -1,14 +1,1 @@
-{"0": {
-  "cookingSteps": [
-    "string"
-  ],
-  "cookingTimeMin": 10,
-  "ingredients": [
-    {
-      "ingredientName": "string",
-      "volume": 10,
-      "unitOfMeasure": "string"
-    }
-  ],
-  "recipeName": "string"
-}}
+{"0":{"recipeName":"string","cookingTimeMin":10,"ingredients":[{"ingredientName":"string","volume":10,"unitOfMeasure":"string"}],"cookingSteps":["string"]},"1":{"recipeName":"яичница","cookingTimeMin":2,"ingredients":[{"ingredientName":"яйцо","volume":2,"unitOfMeasure":"шт"}],"cookingSteps":["пожарить"]}}
