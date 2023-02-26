@@ -1,12 +1,15 @@
 package pro.sky.recipebookc3.services.impl;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pro.sky.recipebookc3.exception.FileProcessingException;
 import pro.sky.recipebookc3.services.FilesService;
 
-import java.io.File;
-import java.io.IOException;
+import javax.annotation.PostConstruct;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -16,7 +19,12 @@ public class IngredientFileServiceImpl implements FilesService {
     private String dataFilePathIngredient;
     @Value("${name.of.ingredient.file}")
     private String dataFileNameIngredient;
+    public Path path;
 
+    @PostConstruct
+    private void init() {
+        path = Path.of(dataFilePathIngredient, dataFileNameIngredient);
+    }
 
     @Override
     public boolean saveToFile(String json) {
@@ -57,8 +65,30 @@ public class IngredientFileServiceImpl implements FilesService {
     }
 
     @Override
-    public File getDataFileTxt() {
+    public File getDataFile() {
         return new File(dataFilePathIngredient + "/" + dataFileNameIngredient);
+    }
+
+    @Override
+    public InputStreamResource exportFile() throws FileNotFoundException {
+        File file = getDataFile();
+        return new InputStreamResource(new FileInputStream(file));
+    }
+
+    @Override
+    public void importFile(MultipartFile file) throws FileNotFoundException {
+        cleanDataFile();
+        FileOutputStream fos = new FileOutputStream(getDataFile());
+        try {
+            IOUtils.copy(file.getInputStream(), fos);
+        } catch (IOException e) {
+            throw new FileProcessingException("Проблема сохранения файла");
+        }
+    }
+
+    @Override
+    public Path getPath() {
+        return path;
     }
 }
 
