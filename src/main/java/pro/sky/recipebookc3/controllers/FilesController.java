@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pro.sky.recipebookc3.services.FilesService;
+import pro.sky.recipebookc3.services.RecipeService;
 import pro.sky.recipebookc3.services.impl.IngredientFileServiceImpl;
 
 import javax.print.attribute.ResolutionSyntax;
@@ -24,10 +25,14 @@ import java.nio.file.Files;
 public class FilesController {
     private final FilesService recipeFileService;
     private final FilesService ingredientFileService;
+    private final RecipeService recipeService;
 
-    public FilesController(@Qualifier("ingredientFileService") FilesService ingredientFileService, @Qualifier("recipeFileService") FilesService recipeFileService) {
+    public FilesController(@Qualifier("ingredientFileService") FilesService ingredientFileService,
+                           @Qualifier("recipeFileService") FilesService recipeFileService,
+                           RecipeService recipeService) {
         this.ingredientFileService = ingredientFileService;
         this.recipeFileService = recipeFileService;
+        this.recipeService = recipeService;
     }
 
     @GetMapping("/ingredient/export")
@@ -59,10 +64,22 @@ public class FilesController {
                 .body(inputStreamResource);
     }
 
+    @GetMapping("/recipe/exporttxt")
+    @Operation(description = "Экспорт файла рецептов")
+    public ResponseEntity<InputStreamResource> downloadTxtRecipeFile() throws IOException {
+        InputStreamResource inputStreamResource = recipeFileService.exportTxtFile(recipeFileService.getRecipeMap());
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .contentLength(Files.size(recipeFileService.getPath()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"AllRecipes.txt\"")
+                .body(inputStreamResource);
+    }
+
     @PostMapping(value = "/recipe/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(description = "Импорт файла рецептов")
     public ResponseEntity<Void> upLoadDataFileRecipe(@RequestParam MultipartFile file) throws FileNotFoundException {
         recipeFileService.importFile(file);
         return ResponseEntity.ok().build();
     }
+
 }

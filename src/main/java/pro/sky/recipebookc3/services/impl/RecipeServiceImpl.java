@@ -29,6 +29,9 @@ public class RecipeServiceImpl implements RecipeService {
     private Map<Integer, Recipe> recipeMap = new HashMap<>();
     private static Integer idRec = 0;
 
+    public Map<Integer, Recipe> getRecipeMap() {
+        return recipeMap;
+    }
 
     @Override
     public Recipe addRecipe(Recipe recipe) {

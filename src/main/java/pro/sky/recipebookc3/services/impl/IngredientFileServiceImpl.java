@@ -6,12 +6,14 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pro.sky.recipebookc3.exception.FileProcessingException;
+import pro.sky.recipebookc3.model.Recipe;
 import pro.sky.recipebookc3.services.FilesService;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 @Service("ingredientFileService")
 public class IngredientFileServiceImpl implements FilesService {
@@ -75,6 +77,8 @@ public class IngredientFileServiceImpl implements FilesService {
         return new InputStreamResource(new FileInputStream(file));
     }
 
+
+
     @Override
     public void importFile(MultipartFile file) throws FileNotFoundException {
         cleanDataFile();
@@ -90,6 +94,17 @@ public class IngredientFileServiceImpl implements FilesService {
     public Path getPath() {
         return path;
     }
+
+    @Override
+    public Map<Integer, Recipe> getRecipeMap() {
+        return null;
+    }
+
+    @Override
+    public InputStreamResource exportTxtFile(Map<Integer, Recipe> recipeMap) throws IOException {
+        return null;
+    }
+
 }
 
 
